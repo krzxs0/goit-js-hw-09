@@ -6,6 +6,9 @@ function onBtnClick(event) {
   const formData = new FormData(event.currentTarget);
   const formInfo = Object.fromEntries(formData.entries());
   formInfo.position = parseInt(formInfo.position);
+  formInfo.delay = parseInt(formInfo.delay);
+  formInfo.step = parseInt(formInfo.step);
+  formInfo.amount = parseInt(formInfo.amount);
 
   createNewPromises(formInfo);
 }
@@ -39,9 +42,9 @@ function createPromise({ position, delay }) {
 }
 
 function onSuccess({ position, delay }) {
-  alert(`Fulfilled promise ${position} in ${delay}ms`);
+  console.log(`Fulfilled promise ${position} in ${delay}ms`);
 }
 
 function onError({ position, delay }) {
-  alert(`Rejected promise ${position} in ${delay}ms`);
+  console.error(`Rejected promise ${position} in ${delay}ms`);
 }
