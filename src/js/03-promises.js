@@ -10,21 +10,41 @@ function onBtnClick(event) {
   formInfo.step = parseInt(formInfo.step);
   formInfo.amount = parseInt(formInfo.amount);
 
-  createNewPromises(formInfo);
+  createNewPromises(formInfo)
+    .then((results) => {
+      results.forEach(onSuccess);
+    })
+    .catch(onError);
 }
 
-async function createNewPromises({ delay, step, amount }) {
-  let currentDelay = delay;
+function createNewPromises({ delay, step, amount }) {
+  return new Promise((resolve, reject) => {
+    let currentDelay = delay;
+    const results = [];
 
-  for (let position = 1; position <= amount; position++) {
-    try {
-      const result = await createPromise({ position, delay: currentDelay });
-      onSuccess(result);
-    } catch (error) {
-      onError(error);
+    function iterate(position) {
+      if (position > amount) {
+        resolve(results);
+        return;
+      }
+
+      createPromise({ position, delay: currentDelay })
+        .then((result) => {
+          results.push(result);
+          onSuccess(result);
+        })
+        .catch((error) => {
+          results.push(error);
+          onError(error);
+        })
+        .finally(() => {
+          currentDelay += step;
+          iterate(position + 1);
+        });
     }
-    currentDelay += step;
-  }
+
+    iterate(1);
+  });
 }
 
 function createPromise({ position, delay }) {
@@ -42,7 +62,7 @@ function createPromise({ position, delay }) {
 }
 
 function onSuccess({ position, delay }) {
-  console.log(`Fulfilled promise ${position} in ${delay}ms`);
+  console.log(`Resolve promise ${position} in ${delay}ms`);
 }
 
 function onError({ position, delay }) {
