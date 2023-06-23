@@ -39,9 +39,9 @@ function createPromise({ position, delay }) {
 }
 
 function onSuccess({ position, delay }) {
-  console.log(`Fulfilled promise ${position} in ${delay}ms`);
+  alert(`Fulfilled promise ${position} in ${delay}ms`);
 }
 
 function onError({ position, delay }) {
-  console.error(`Rejected promise ${position} in ${delay}ms`);
+  alert(`Rejected promise ${position} in ${delay}ms`);
 }
